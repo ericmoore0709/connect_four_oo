@@ -12,10 +12,10 @@ class Game {
     this.height = height;
     this.currPlayer = 1;
     this.board = [];
+    this.gameActive = true;
 
     this.makeBoard();
     this.makeHtmlBoard();
-
   }
 
   /** makeBoard: create in-JS board structure:
@@ -30,6 +30,7 @@ class Game {
   /** makeHtmlBoard: make HTML table and row of column tops. */
   makeHtmlBoard() {
     const board = document.getElementById('board');
+    board.innerHTML = '';
 
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
@@ -59,6 +60,7 @@ class Game {
 
       board.append(row);
     }
+
   }
 
 
@@ -87,12 +89,18 @@ class Game {
   /** endGame: announce game end */
 
   endGame(msg) {
+    this.gameActive = false;
     alert(msg);
   }
 
   /** handleClick: handle click of column top to play piece */
 
   handleClick(evt) {
+
+    if (!this.gameActive) {
+      return;
+    }
+
     // get x from ID of clicked cell
     const x = +evt.target.id;
 
@@ -157,4 +165,8 @@ class Game {
 
 }
 
-new Game(7, 6);
+document.getElementById('start_game').addEventListener('click', () => {
+  new Game(7, 6);
+});
+
+
