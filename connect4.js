@@ -1,5 +1,3 @@
-'use strict';
-
 /** Connect Four
  *
  * Player 1 and 2 alternate turns. On each turn, a piece is dropped down a
@@ -7,10 +5,11 @@
  * board fills (tie)
  */
 class Game {
-  constructor(width = 7, height = 6) {
+  constructor(width = 7, height = 6, player1, player2) {
     this.width = width;
     this.height = height;
-    this.currPlayer = 1;
+    this.players = [player1, player2];
+    this.currPlayer = this.players[0];
     this.board = [];
     this.gameActive = true;
 
@@ -79,7 +78,7 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`${y}-${x}`);
@@ -116,7 +115,7 @@ class Game {
 
     // check for win
     if (this.checkForWin()) {
-      return this.endGame(`Player ${this.currPlayer} won!`);
+      return this.endGame(`Player ${this.currPlayer.color} won!`);
     }
 
     // check for tie
@@ -125,7 +124,7 @@ class Game {
     }
 
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer = this.currPlayer === this.players[0] ? this.players[1] : this.players[0];
   }
 
   /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -165,8 +164,14 @@ class Game {
 
 }
 
+class Player {
+  constructor(color) {
+    this.color = color;
+  }
+}
+
 document.getElementById('start_game').addEventListener('click', () => {
-  new Game(7, 6);
+  new Game(7, 6, new Player(document.getElementById('input_player1').value), new Player(document.getElementById('input_player2').value));
 });
 
 
